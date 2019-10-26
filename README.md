@@ -1,5 +1,7 @@
 # Actionhero Socket Server
 
+[![CircleCI](https://circleci.com/gh/actionhero/actionhero-socket-server.svg?style=svg)](https://circleci.com/gh/actionhero/actionhero-socket-server)
+
 As of Actionhero v21, the socket server is not included with Actionhero by default.  You can add it (this package) via `npm install actionhero-socket-server`.
 
 ```shell
