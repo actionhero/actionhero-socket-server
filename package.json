@@ -1,0 +1,54 @@
+{
+  "author": "Evan Tahler <evantahler@gmail.com>",
+  "name": "actionhero-socket-server",
+  "description": "a TCP and JSON server for actionhero",
+  "version": "1.0.0",
+  "homepage": "http://www.actionherojs.com",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/actionhero/actionhero-socket-server.git"
+  },
+  "main": "index.js",
+  "keywords": [
+    "api",
+    "realtime",
+    "socket",
+    "web",
+    "game",
+    "cluster",
+    "soa",
+    "action",
+    "service",
+    "tcp",
+    "json"
+  ],
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "actionhero": "^20.0.0",
+    "jest": "^24.9.0",
+    "standard": "^14.3.1"
+  },
+  "standard": {
+    "ignore": [
+      "public"
+    ],
+    "globals": [
+      "describe",
+      "test",
+      "beforeAll",
+      "beforeEach",
+      "afterAll",
+      "afterEach",
+      "expect"
+    ]
+  },
+  "scripts": {
+    "test": "jest",
+    "pretest": "standard",
+    "start": "actionhero"
+  }
+}

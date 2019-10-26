@@ -1,0 +1,11 @@
+{
+	"actionhero": {
+		"welcomeMessage": "actionhero.welcomeMessage",
+		"errors": {
+			"connectionRoomAndMessage": "actionhero.errors.connectionRoomAndMessage",
+			"unknownAction": "actionhero.errors.unknownAction"
+		},
+		"goodbyeMessage": "actionhero.goodbyeMessage"
+	},
+	"Your random number is {{randomNumber}}": "Your random number is {{randomNumber}}"
+}
