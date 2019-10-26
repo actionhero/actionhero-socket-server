@@ -1,7 +1,7 @@
 {
   "author": "Evan Tahler <evantahler@gmail.com>",
   "name": "actionhero-socket-server",
-  "description": "a TCP and JSON server for actionhero",
+  "description": "A TCP and JSON server for actionhero",
   "version": "1.0.0",
   "homepage": "http://www.actionherojs.com",
   "license": "Apache-2.0",
