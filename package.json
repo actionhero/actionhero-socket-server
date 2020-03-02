@@ -1,8 +1,8 @@
 {
-  "author": "Evan Tahler <evantahler@gmail.com>",
+  "author": "Evan Tahler <evan@delicioushat.com>",
   "name": "actionhero-socket-server",
   "description": "A TCP and JSON server for actionhero",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "homepage": "http://www.actionherojs.com",
   "license": "Apache-2.0",
   "repository": {
@@ -24,31 +24,31 @@
     "json"
   ],
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=12.0.0"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.ts?$": "ts-jest"
+    }
   },
   "dependencies": {},
   "devDependencies": {
-    "actionhero": "^20.0.0",
-    "jest": "^24.9.0",
-    "standard": "^14.3.1"
-  },
-  "standard": {
-    "ignore": [
-      "public"
-    ],
-    "globals": [
-      "describe",
-      "test",
-      "beforeAll",
-      "beforeEach",
-      "afterAll",
-      "afterEach",
-      "expect"
-    ]
+    "@types/node": "latest",
+    "@types/jest": "latest",
+    "actionhero": "^22.0.2",
+    "jest": "^25.1.0",
+    "prettier": "latest",
+    "ts-jest": "latest",
+    "ts-node-dev": "latest",
+    "typescript": "latest"
   },
   "scripts": {
     "test": "jest",
-    "pretest": "standard",
-    "start": "actionhero"
+    "pretest": "npm run lint && npm run build",
+    "lint": "prettier --check src/*.ts __tests__/*.ts",
+    "dev": "ts-node-dev --no-deps --transpile-only ./src/server.ts",
+    "build": "./node_modules/.bin/tsc --declaration && rm -rf dist/actions",
+    "start": "node ./dist/server.js",
+    "prepare": "npm run build"
   }
 }

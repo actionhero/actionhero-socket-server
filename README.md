@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/actionhero/actionhero-socket-server.svg?style=svg)](https://circleci.com/gh/actionhero/actionhero-socket-server)
 
-As of Actionhero v21, the socket server is not included with Actionhero by default.  You can add it (this package) via `npm install actionhero-socket-server`.
+As of Actionhero v21, the socket server is not included with Actionhero by default. You can add it (this package) via `npm install actionhero-socket-server`.
 
 ```shell
 ❯ telnet localhost 5000
@@ -17,28 +17,45 @@ exit
 Connection closed by foreign host.
 ```
 
-## Instalation
+## Installation
+
 1. Add the package to your actionhero project: `npm install actionhero-socket-server --save`
-2. Copy the config file into your project `cp ./node_modules/actionhero-socket-server/config/servers/socket.js config/servers/socket.js`
+2. Copy the config file into your project `cp ./node_modules/actionhero-socket-server/src/config/servers/socket.js src/config/servers/socket.js`
 3. Enable the plugin:
+
 ```js
-// in config/plugins.js
-exports['default'] = {
-  plugins: (api) => {
+// in config/plugins.ts
+export const DEFAULT = {
+  plugins: config => {
     return {
-      'actionhero-socket-server': { path: __dirname + '/../node_modules/actionhero-socket-server' }
-    }
+      "actionhero-socket-server": {
+        path: __dirname + "/../node_modules/actionhero-socket-server"
+      }
+    };
   }
-}
+};
+```
+
+4. Add a searilazer for errors:
+
+```ts
+socket: error => {
+            if (error.message) {
+              return String(error.message);
+            } else {
+              return error;
+            }
+          },
 ```
 
 ## Options
+
 All options are exposed via the config file:
 
-```js
-exports.default = {
+```ts
+export const DEFAULT = {
   servers: {
-    socket: (api) => {
+    socket: config => {
       return {
         enabled: true,
         // TCP or TLS?
@@ -48,15 +65,15 @@ exports.default = {
         // Port or Socket
         port: 5000,
         // Which IP to listen on (use 0.0.0.0 for all)
-        bindIP: '0.0.0.0',
+        bindIP: "0.0.0.0",
         // Enable TCP KeepAlive pings on each connection?
         setKeepAlive: false,
         // Delimiter string for incoming messages
-        delimiter: '\n',
+        delimiter: "\n",
         // Maximum incoming message string length in Bytes (use 0 for Infinite)
         maxDataLength: 0
-      }
+      };
     }
   }
-}
+};
 ```

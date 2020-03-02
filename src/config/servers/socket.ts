@@ -1,6 +1,6 @@
-exports.default = {
+export const DEFAULT = {
   servers: {
-    socket: (api) => {
+    socket: config => {
       return {
         enabled: true,
         // TCP or TLS?
@@ -10,26 +10,31 @@ exports.default = {
         // Port or Socket
         port: 5000,
         // Which IP to listen on (use 0.0.0.0 for all)
-        bindIP: '0.0.0.0',
+        bindIP: "0.0.0.0",
         // Enable TCP KeepAlive pings on each connection?
         setKeepAlive: false,
         // Delimiter string for incoming messages
-        delimiter: '\n',
+        delimiter: "\n",
         // Maximum incoming message string length in Bytes (use 0 for Infinite)
         maxDataLength: 0
-      }
+      };
     }
   }
-}
+};
 
-exports.test = {
+export const test = {
   servers: {
-    socket: (api) => {
+    socket: config => {
       return {
         enabled: true,
-        port: 15000 + parseInt(process.env.JEST_WORKER_ID || 0),
-        secure: false
-      }
+        port:
+          15000 +
+          (process.env.JEST_WORKER_ID
+            ? parseInt(process.env.JEST_WORKER_ID)
+            : 0),
+        secure: false,
+        maxDataLength: 999
+      };
     }
   }
-}
+};
