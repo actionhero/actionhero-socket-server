@@ -47,7 +47,8 @@
     "pretest": "npm run lint && npm run build",
     "lint": "prettier --check src/*.ts __tests__/*.ts",
     "dev": "ts-node-dev --no-deps --transpile-only ./src/server.ts",
-    "build": "tsc --declaration",
-    "start": "node ./dist/server.js"
+    "build": "./node_modules/.bin/tsc --declaration && rm -rf dist/actions",
+    "start": "node ./dist/server.js",
+    "prepare": "npm run build"
   }
 }
