@@ -1,9 +1,9 @@
 version: 2
 
 # Define common steps all parts of the test workflow use
-refrences:
+references:
   ignored-branches: &ignored-branches
-     branches:
+    branches:
       ignore:
         - gh-pages
 
@@ -25,21 +25,8 @@ refrences:
           name: display-npm-version
           command: npm --version
       - run:
-          name: test-log-setup
-          command: mkdir -p ./log
-      - run:
-          name: test-reporter-setup
-          command: mkdir ./junit
-      - run:
           name: test
-          command: ./node_modules/.bin/jest --ci --reporters=jest-junit --reporters=default --runInBand
-          environment:
-            NODE_ENV: test
-          when: always
-      - store_test_results:
-          path: ./reports/junit/
-      - store_artifacts:
-          path: ./reports/junit/
+          command: npm test
 
 # Test the common workflow on multiple versions of node
 jobs:
@@ -53,41 +40,27 @@ jobs:
       - run:
           name: npm-install
           command: npm install
-      - run:
-          name: test-reporter-setup
-          command: npm install jest-junit --no-save
       - save_cache:
           <<: *cache-options
           paths:
             - ./node_modules
 
-  linter:
-    docker:
-      - image: circleci/node:12
-    steps:
-      - checkout
-      - restore_cache:
-          <<: *cache-options
-      - run:
-          name: linter
-          command: ./node_modules/.bin/standard
-
   test-node-v8:
     docker:
       - image: circleci/node:8
-      - image: redis:4
+      - image: redis:5
     <<: *shared-test-steps
 
   test-node-v10:
     docker:
       - image: circleci/node:10
-      - image: redis:4
+      - image: redis:5
     <<: *shared-test-steps
 
   test-node-v12:
     docker:
       - image: circleci/node:12
-      - image: redis:4
+      - image: redis:5
     <<: *shared-test-steps
 
   tests-complete:
@@ -107,29 +80,23 @@ workflows:
           filters:
             <<: *ignored-branches
 
-      - linter:
+      - test-node-v8:
           filters:
             <<: *ignored-branches
           requires:
             - build
 
-      - test-node-v8:
-          filters:
-            <<: *ignored-branches
-          requires:
-            - linter
-
       - test-node-v10:
           filters:
             <<: *ignored-branches
           requires:
-            - linter
+            - build
 
       - test-node-v12:
           filters:
             <<: *ignored-branches
           requires:
-            - linter
+            - build
 
       - tests-complete:
           filters:

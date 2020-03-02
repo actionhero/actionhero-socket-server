@@ -44,8 +44,10 @@
   },
   "scripts": {
     "test": "jest",
-    "pretest": "prettier --check src/*.ts __tests__/*.ts",
+    "pretest": "npm run lint && npm run build",
+    "lint": "prettier --check src/*.ts __tests__/*.ts",
     "dev": "ts-node-dev --no-deps --transpile-only ./src/server.ts",
+    "build": "tsc --declaration",
     "start": "node ./dist/server.js"
   }
 }
