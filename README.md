@@ -20,32 +20,43 @@ Connection closed by foreign host.
 ## Installation
 
 1. Add the package to your actionhero project: `npm install actionhero-socket-server --save`
-2. Copy the config file into your project `cp ./node_modules/actionhero-socket-server/src/config/servers/socket.js src/config/servers/socket.js`
+2. Copy the config file into your project `cp ./node_modules/actionhero-socket-server/src/config/servers/socket.ts src/config/servers/socket.ts`
 3. Enable the plugin:
 
-```js
+```ts
 // in config/plugins.ts
+import * as path from "path";
+
 export const DEFAULT = {
-  plugins: config => {
+  plugins: () => {
     return {
       "actionhero-socket-server": {
-        path: __dirname + "/../node_modules/actionhero-socket-server"
-      }
+        path: path.join(
+          __dirname,
+          "..",
+          "..",
+          "node_modules",
+          "actionhero-socket-server"
+        ),
+      },
     };
-  }
+  },
 };
 ```
 
-4. Add a searilazer for errors:
+4. Add a serializer for errors:
 
 ```ts
+// in config/errors.ts
+// you are adding config.errors.serializers.socket
+
 socket: error => {
-            if (error.message) {
-              return String(error.message);
-            } else {
-              return error;
-            }
-          },
+  if (error.message) {
+    return String(error.message);
+  } else {
+    return error;
+  }
+},
 ```
 
 ## Options
@@ -55,7 +66,7 @@ All options are exposed via the config file:
 ```ts
 export const DEFAULT = {
   servers: {
-    socket: config => {
+    socket: (config) => {
       return {
         enabled: true,
         // TCP or TLS?
@@ -71,9 +82,9 @@ export const DEFAULT = {
         // Delimiter string for incoming messages
         delimiter: "\n",
         // Maximum incoming message string length in Bytes (use 0 for Infinite)
-        maxDataLength: 0
+        maxDataLength: 0,
       };
-    }
-  }
+    },
+  },
 };
 ```
