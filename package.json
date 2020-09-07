@@ -2,7 +2,7 @@
   "author": "Evan Tahler <evan@delicioushat.com>",
   "name": "actionhero-socket-server",
   "description": "A TCP and JSON server for actionhero",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "homepage": "http://www.actionherojs.com",
   "license": "Apache-2.0",
   "repository": {
@@ -33,19 +33,19 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@types/node": "latest",
-    "@types/jest": "latest",
-    "actionhero": "^22.0.2",
-    "jest": "^25.1.0",
-    "prettier": "latest",
-    "ts-jest": "latest",
-    "ts-node-dev": "latest",
-    "typescript": "latest"
+    "@types/node": "^14.6.4",
+    "@types/jest": "^26.0.13",
+    "actionhero": "^23.0.10",
+    "jest": "^26.4.2",
+    "prettier": "^2.1.1",
+    "ts-jest": "^26.3.0",
+    "ts-node-dev": "^1.0.0-pre.62",
+    "typescript": "^4.0.2"
   },
   "scripts": {
     "test": "jest",
     "pretest": "npm run lint && npm run build",
-    "lint": "prettier --check src/*.ts __tests__/*.ts",
+    "lint": "prettier --check src __tests__",
     "dev": "ts-node-dev --no-deps --transpile-only ./src/server.ts",
     "build": "./node_modules/.bin/tsc --declaration && rm -rf dist/actions",
     "start": "node ./dist/server.js",

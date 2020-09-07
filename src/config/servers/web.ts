@@ -1,9 +1,9 @@
 export const DEFAULT = {
   servers: {
-    web: config => {
+    web: (config) => {
       return {
-        enabled: false
+        enabled: false,
       };
-    }
-  }
+    },
+  },
 };

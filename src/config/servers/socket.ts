@@ -1,6 +1,6 @@
 export const DEFAULT = {
   servers: {
-    socket: config => {
+    socket: (config) => {
       return {
         enabled: true,
         // TCP or TLS?
@@ -16,15 +16,15 @@ export const DEFAULT = {
         // Delimiter string for incoming messages
         delimiter: "\n",
         // Maximum incoming message string length in Bytes (use 0 for Infinite)
-        maxDataLength: 0
+        maxDataLength: 0,
       };
-    }
-  }
+    },
+  },
 };
 
 export const test = {
   servers: {
-    socket: config => {
+    socket: (config) => {
       return {
         enabled: true,
         port:
@@ -33,8 +33,8 @@ export const test = {
             ? parseInt(process.env.JEST_WORKER_ID)
             : 0),
         secure: false,
-        maxDataLength: 999
+        maxDataLength: 999,
       };
-    }
-  }
+    },
+  },
 };

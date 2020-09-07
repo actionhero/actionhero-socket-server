@@ -1,9 +1,9 @@
 export const DEFAULT = {
   servers: {
-    websocket: config => {
+    websocket: (config) => {
       return {
-        enabled: false
+        enabled: false,
       };
-    }
-  }
+    },
+  },
 };

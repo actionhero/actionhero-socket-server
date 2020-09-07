@@ -27,8 +27,8 @@ export class SocketServer extends Server {
         "roomLeave",
         "roomView",
         "detailsView",
-        "say"
-      ]
+        "say",
+      ],
     };
   }
 
@@ -40,34 +40,34 @@ export class SocketServer extends Server {
     if (this.config.secure === false) {
       this.server = net.createServer(
         this.config.serverOptions,
-        rawConnection => {
+        (rawConnection) => {
           this.handleConnection(rawConnection);
         }
       );
     } else {
       this.server = tls.createServer(
         this.config.serverOptions,
-        rawConnection => {
+        (rawConnection) => {
           this.handleConnection(rawConnection);
         }
       );
     }
 
-    this.server.on("error", error => {
+    this.server.on("error", (error) => {
       throw new Error(
         `Cannot start socket server @ ${this.config.bindIP}:${this.config.port} => ${error.message}`
       );
     });
 
-    await new Promise(resolve => {
+    await new Promise((resolve) => {
       this.server.listen(this.config.port, this.config.bindIP, resolve);
     });
 
-    this.on("connection", async connection => {
+    this.on("connection", async (connection) => {
       await this.onConnection(connection);
     });
 
-    this.on("actionComplete", data => {
+    this.on("actionComplete", (data) => {
       if (data.toRender === true) {
         data.response.context = "response";
         this.sendMessage(data.connection, data.response, data.messageId);
@@ -107,7 +107,7 @@ export class SocketServer extends Server {
       connection.rawConnection.end(
         JSON.stringify({
           status: connection.localize("actionhero.goodbyeMessage"),
-          context: "api"
+          context: "api",
         }) + "\r\n"
       );
     } catch (e) {
@@ -134,14 +134,14 @@ export class SocketServer extends Server {
       fingerprint: id,
       rawConnection: rawConnection,
       remoteAddress: rawConnection.remoteAddress,
-      remotePort: rawConnection.remotePort
+      remotePort: rawConnection.remotePort,
     });
   }
 
   async onConnection(connection) {
     connection.params = {};
 
-    connection.rawConnection.on("data", async chunk => {
+    connection.rawConnection.on("data", async (chunk) => {
       if (this.checkBreakChars(chunk)) {
         connection.destroy();
       } else {
@@ -176,7 +176,7 @@ export class SocketServer extends Server {
       }
     });
 
-    connection.rawConnection.on("error", e => {
+    connection.rawConnection.on("error", (e) => {
       if (connection.destroyed !== true) {
         this.log("socket error: " + e, "error");
         try {
@@ -198,7 +198,7 @@ export class SocketServer extends Server {
           {
             status: "error",
             error: error,
-            context: "response"
+            context: "response",
           },
           null
         );
@@ -281,7 +281,7 @@ export class SocketServer extends Server {
     }
 
     let pendingConnections = 0;
-    this.connections().forEach(connection => {
+    this.connections().forEach((connection) => {
       if (connection.pendingActions === 0) {
         connection.destroy();
       } else {
@@ -300,7 +300,7 @@ export class SocketServer extends Server {
         `waiting on shutdown, there are still ${pendingConnections} connected clients waiting on a response`,
         "notice"
       );
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         setTimeout(resolve, 1000);
       });
       return this.gracefulShutdown(true);

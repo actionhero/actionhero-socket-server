@@ -6,8 +6,8 @@ const app = new Process();
 
 process.chdir(path.join(__dirname, "..", "..", "node_modules", "actionhero"));
 
-const sleep = zzz => {
-  return new Promise(resolve => {
+const sleep = (zzz) => {
+  return new Promise((resolve) => {
     setTimeout(resolve, zzz);
   });
 };
@@ -25,8 +25,8 @@ const makeSocketRequest = async (
 ): Promise<any> => {
   let data = "";
   let response;
-  return new Promise(resolve => {
-    const onData = d => {
+  return new Promise((resolve) => {
+    const onData = (d) => {
       data += d;
       const lines = data.split(delimiter);
       while (lines.length > 0) {
@@ -47,7 +47,7 @@ const makeSocketRequest = async (
 };
 
 const buildClient = (): any => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const conn = net.connect(config.servers.socket.port);
     // conn.data = "";
     conn.on("connect", () => {
@@ -127,8 +127,8 @@ describe("Server: Socket", () => {
           uuid.v4() +
           uuid.v4() +
           uuid.v4() +
-          uuid.v4()
-      }
+          uuid.v4(),
+      },
     };
 
     const response = await makeSocketRequest(client, JSON.stringify(msg));
@@ -240,7 +240,7 @@ describe("Server: Socket", () => {
       client,
       JSON.stringify({
         action: "randomNumber",
-        params: { messageId: "abc123" }
+        params: { messageId: "abc123" },
       })
     );
     expect(response.messageId).toEqual("abc123");
@@ -255,7 +255,7 @@ describe("Server: Socket", () => {
     const response = await makeSocketRequest(newClient, "detailsView");
     expect(response.status).toEqual("OK");
 
-    await new Promise(resolve => {
+    await new Promise((resolve) => {
       newClient.on("close", () => {
         return resolve();
       });
@@ -275,14 +275,14 @@ describe("Server: Socket", () => {
     while (i <= config.general.simultaneousActions) {
       msg += `${JSON.stringify({
         action: "sleepTest",
-        sleepDuration: 100
+        sleepDuration: 100,
       })} \r\n`;
       i++;
     }
 
-    await new Promise(resolve => {
-      const checkResponses = data => {
-        data.split("\n").forEach(line => {
+    await new Promise((resolve) => {
+      const checkResponses = (data) => {
+        data.split("\n").forEach((line) => {
           if (line.length > 0 && line.indexOf("welcome") < 0) {
             responses.push(JSON.parse(line));
           }
@@ -321,8 +321,8 @@ describe("Server: Socket", () => {
         action: "cacheTest",
         params: {
           key: uuid.v4(),
-          value: longMessage
-        }
+          value: longMessage,
+        },
       };
 
       const response = await makeSocketRequest(client, JSON.stringify(msg));
@@ -423,7 +423,7 @@ describe("Server: Socket", () => {
               room,
               `I have entered the room: ${connection.id}`
             );
-          }
+          },
         });
 
         chatRoom.addMiddleware({
@@ -434,7 +434,7 @@ describe("Server: Socket", () => {
               room,
               `I have left the room: ${connection.id}`
             );
-          }
+          },
         });
       });
 
@@ -512,20 +512,20 @@ describe("Server: Socket", () => {
 
         // override functions
         //@ts-ignore
-        chatRoom.sanitizeMemberDetails = connection => {
+        chatRoom.sanitizeMemberDetails = (connection) => {
           return {
             id: connection.id,
             joinedAt: connection.joinedAt,
-            type: connection.type
+            type: connection.type,
           };
         };
 
         //@ts-ignore
-        chatRoom.generateMemberDetails = connection => {
+        chatRoom.generateMemberDetails = (connection) => {
           return {
             id: connection.id,
             joinedAt: new Date().getTime(),
-            type: connection.type
+            type: connection.type,
           };
         };
       });
@@ -574,7 +574,7 @@ describe("Server: Socket", () => {
         api.connections.connections[id].destroy();
       }
 
-      await new Promise(resolve => {
+      await new Promise((resolve) => {
         client.on("close", () => {
           return resolve();
         });
