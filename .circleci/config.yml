@@ -32,7 +32,7 @@ references:
 jobs:
   build:
     docker:
-      - image: circleci/node:12
+      - image: circleci/node:14
     steps:
       - checkout
       - restore_cache:
@@ -44,12 +44,6 @@ jobs:
           <<: *cache-options
           paths:
             - ./node_modules
-
-  test-node-v8:
-    docker:
-      - image: circleci/node:8
-      - image: redis:5
-    <<: *shared-test-steps
 
   test-node-v10:
     docker:
@@ -63,9 +57,15 @@ jobs:
       - image: redis:5
     <<: *shared-test-steps
 
+  test-node-v14:
+    docker:
+      - image: circleci/node:14
+      - image: redis:5
+    <<: *shared-test-steps
+
   tests-complete:
     docker:
-      - image: circleci/node:12
+      - image: circleci/node:14
     steps:
       - run:
           name: hooray
@@ -80,12 +80,6 @@ workflows:
           filters:
             <<: *ignored-branches
 
-      - test-node-v8:
-          filters:
-            <<: *ignored-branches
-          requires:
-            - build
-
       - test-node-v10:
           filters:
             <<: *ignored-branches
@@ -98,10 +92,16 @@ workflows:
           requires:
             - build
 
+      - test-node-v14:
+          filters:
+            <<: *ignored-branches
+          requires:
+            - build
+
       - tests-complete:
           filters:
             <<: *ignored-branches
           requires:
-            - test-node-v8
             - test-node-v10
             - test-node-v12
+            - test-node-v14
