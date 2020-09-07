@@ -35,7 +35,7 @@
   "devDependencies": {
     "@types/node": "latest",
     "@types/jest": "latest",
-    "actionhero": "^22.0.2",
+    "actionhero": "^23.0.9",
     "jest": "^25.1.0",
     "prettier": "latest",
     "ts-jest": "latest",
