@@ -257,7 +257,7 @@ describe("Server: Socket", () => {
 
     await new Promise((resolve) => {
       newClient.on("close", () => {
-        return resolve();
+        return resolve(null);
       });
       newClient.write("quit\n");
     });
@@ -301,7 +301,7 @@ describe("Server: Socket", () => {
             }
           }
 
-          resolve();
+          return resolve(null);
         }
       };
 
@@ -576,7 +576,7 @@ describe("Server: Socket", () => {
 
       await new Promise((resolve) => {
         client.on("close", () => {
-          return resolve();
+          return resolve(null);
         });
       });
 
