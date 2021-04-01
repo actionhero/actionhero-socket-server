@@ -45,12 +45,6 @@ jobs:
           paths:
             - ./node_modules
 
-  test-node-v10:
-    docker:
-      - image: circleci/node:10
-      - image: redis:5
-    <<: *shared-test-steps
-
   test-node-v12:
     docker:
       - image: circleci/node:12
@@ -80,12 +74,6 @@ workflows:
           filters:
             <<: *ignored-branches
 
-      - test-node-v10:
-          filters:
-            <<: *ignored-branches
-          requires:
-            - build
-
       - test-node-v12:
           filters:
             <<: *ignored-branches
@@ -102,6 +90,5 @@ workflows:
           filters:
             <<: *ignored-branches
           requires:
-            - test-node-v10
             - test-node-v12
             - test-node-v14
