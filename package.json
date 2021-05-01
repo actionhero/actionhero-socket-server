@@ -34,7 +34,7 @@
   "dependencies": {},
   "devDependencies": {
     "@types/jest": "^26.0.22",
-    "@types/node": "^14.14.37",
+    "@types/node": "^15.0.1",
     "actionhero": "^25.0.8",
     "jest": "^26.6.3",
     "prettier": "^2.2.1",
