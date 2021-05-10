@@ -31,7 +31,6 @@
       "^.+\\.ts?$": "ts-jest"
     }
   },
-  "dependencies": {},
   "devDependencies": {
     "@types/jest": "^26.0.22",
     "@types/node": "^15.0.1",

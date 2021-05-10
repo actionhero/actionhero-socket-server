@@ -159,9 +159,8 @@ export class SocketServer extends Server {
             0,
             index
           );
-          connection.rawConnection.socketDataString = connection.rawConnection.socketDataString.slice(
-            index + d.length
-          );
+          connection.rawConnection.socketDataString =
+            connection.rawConnection.socketDataString.slice(index + d.length);
           const lines = data.split(d);
           for (const i in lines) {
             await this.parseLine(connection, lines[i]);
