@@ -13,7 +13,7 @@ Escape character is '^]'.
 randomNumber
 {"randomNumber":0.11296216329530862,"stringRandomNumber":"Your random number is 0.11296216329530862","context":"response","messageId":"8778822d-0953-4d0c-9c04-98cd53b53b7d"}
 exit
-{"status":"actionhero.goodbyeMessage","context":"api"}
+{"status":"Bye","context":"api"}
 Connection closed by foreign host.
 ```
 

@@ -105,10 +105,7 @@ export class SocketServer extends Server {
   async goodbye(connection) {
     try {
       connection.rawConnection.end(
-        JSON.stringify({
-          status: connection.localize("actionhero.goodbyeMessage"),
-          context: "api",
-        }) + "\r\n"
+        JSON.stringify({ status: "Bye", context: "api" }) + "\r\n"
       );
     } catch (e) {
       console.log(e);
