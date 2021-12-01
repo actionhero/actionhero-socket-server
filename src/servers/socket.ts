@@ -1,7 +1,9 @@
 import * as net from "net";
 import * as tls from "tls";
 import * as uuid from "uuid";
-import { config, Server } from "actionhero";
+import { ActionProcessor, config, Connection, Server } from "actionhero";
+
+type RawConnection = net.Socket | (net.Socket & { socketDataString: string });
 
 export class SocketServer extends Server {
   constructor() {
@@ -53,7 +55,7 @@ export class SocketServer extends Server {
       );
     }
 
-    this.server.on("error", (error) => {
+    this.server.on("error", (error: NodeJS.ErrnoException) => {
       throw new Error(
         `Cannot start socket server @ ${this.config.bindIP}:${this.config.port} => ${error.message}`
       );
@@ -63,11 +65,11 @@ export class SocketServer extends Server {
       this.server.listen(this.config.port, this.config.bindIP, resolve);
     });
 
-    this.on("connection", async (connection) => {
+    this.on("connection", async (connection: Connection) => {
       await this.onConnection(connection);
     });
 
-    this.on("actionComplete", (data) => {
+    this.on("actionComplete", (data: ActionProcessor<any>) => {
       if (data.toRender === true) {
         data.response.context = "response";
         this.sendMessage(data.connection, data.response, data.messageId);
@@ -79,7 +81,11 @@ export class SocketServer extends Server {
     await this.gracefulShutdown();
   }
 
-  async sendMessage(connection, message, messageId) {
+  async sendMessage(
+    connection: Connection,
+    message: Record<string, any>,
+    messageId: string | number
+  ) {
     if (message.error) {
       message.error = config.errors.serializers.servers
         ? await config.errors.serializers.servers.socket(message.error)
@@ -102,7 +108,7 @@ export class SocketServer extends Server {
   }
 
   // @ts-ignore
-  async goodbye(connection) {
+  async goodbye(connection: Connection) {
     try {
       connection.rawConnection.end(
         JSON.stringify({ status: "Bye", context: "api" }) + "\r\n"
@@ -112,7 +118,11 @@ export class SocketServer extends Server {
     }
   }
 
-  async sendFile(connection, error, fileStream) {
+  async sendFile(
+    connection: Connection,
+    error: NodeJS.ErrnoException,
+    fileStream: any
+  ) {
     if (error) {
       this.sendMessage(connection, error, connection.messageId);
     } else {
@@ -120,11 +130,11 @@ export class SocketServer extends Server {
     }
   }
 
-  handleConnection(rawConnection) {
+  handleConnection(rawConnection: RawConnection) {
     if (this.config.setKeepAlive === true) {
       rawConnection.setKeepAlive(true);
     }
-    rawConnection.socketDataString = "";
+    rawConnection["socketDataString"] = "";
     const id = uuid.v4();
     this.buildConnection({
       id,
@@ -135,7 +145,7 @@ export class SocketServer extends Server {
     });
   }
 
-  async onConnection(connection) {
+  async onConnection(connection: Connection) {
     connection.params = {};
 
     connection.rawConnection.on("data", async (chunk) => {
@@ -172,7 +182,7 @@ export class SocketServer extends Server {
       }
     });
 
-    connection.rawConnection.on("error", (e) => {
+    connection.rawConnection.on("error", (e: NodeJS.ErrnoException) => {
       if (connection.destroyed !== true) {
         this.log("socket error: " + e, "error");
         try {
@@ -183,7 +193,7 @@ export class SocketServer extends Server {
     });
   }
 
-  async parseLine(connection, line) {
+  async parseLine(connection: Connection, line: string) {
     if (this.config.maxDataLength > 0) {
       const blen = Buffer.byteLength(line, "utf8");
       if (blen > this.config.maxDataLength) {
@@ -206,7 +216,7 @@ export class SocketServer extends Server {
     }
   }
 
-  async parseRequest(connection, line) {
+  async parseRequest(connection: Connection, line: string) {
     const words = line.split(" ");
     const verb = words.shift();
     connection.messageId = connection.params.messageId || uuid.v4();
@@ -257,7 +267,7 @@ export class SocketServer extends Server {
     return this.processAction(connection);
   }
 
-  checkBreakChars(chunk) {
+  checkBreakChars(chunk: Buffer) {
     let found = false;
     const hexChunk = chunk.toString("hex", 0, chunk.length);
     if (hexChunk === "fff4fffd06") {

@@ -48,7 +48,7 @@ const makeSocketRequest = async (
 
 const buildClient = (): any => {
   return new Promise((resolve) => {
-    const conn = net.connect(config.servers.socket.port);
+    const conn = net.connect(config.socket.port?.toString());
     // conn.data = "";
     conn.on("connect", () => {
       conn.setEncoding("utf8");
