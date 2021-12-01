@@ -4,6 +4,8 @@
 
 As of Actionhero v21, the socket server is not included with Actionhero by default. You can add it (this package) via `npm install actionhero-socket-server`.
 
+As of version `3.0.0` of this package, Actionhero v28+ is required.
+
 ```shell
 ❯ telnet localhost 5000
 Trying 127.0.0.1...
