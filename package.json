@@ -2,7 +2,7 @@
   "author": "Evan Tahler <evan@delicioushat.com>",
   "name": "actionhero-socket-server",
   "description": "A TCP and JSON server for actionhero",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "homepage": "http://www.actionherojs.com",
   "license": "Apache-2.0",
   "repository": {
