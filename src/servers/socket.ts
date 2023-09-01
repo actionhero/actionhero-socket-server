@@ -44,20 +44,20 @@ export class SocketServer extends Server {
         this.config.serverOptions,
         (rawConnection) => {
           this.handleConnection(rawConnection);
-        }
+        },
       );
     } else {
       this.server = tls.createServer(
         this.config.serverOptions,
         (rawConnection) => {
           this.handleConnection(rawConnection);
-        }
+        },
       );
     }
 
     this.server.on("error", (error: NodeJS.ErrnoException) => {
       throw new Error(
-        `Cannot start socket server @ ${this.config.bindIP}:${this.config.port} => ${error.message}`
+        `Cannot start socket server @ ${this.config.bindIP}:${this.config.port} => ${error.message}`,
       );
     });
 
@@ -84,7 +84,7 @@ export class SocketServer extends Server {
   async sendMessage(
     connection: Connection,
     message: Record<string, any>,
-    messageId: string | number
+    messageId: string | number,
   ) {
     if (message.error) {
       message.error = config.errors.serializers.servers
@@ -111,7 +111,7 @@ export class SocketServer extends Server {
   async goodbye(connection: Connection) {
     try {
       connection.rawConnection.end(
-        JSON.stringify({ status: "Bye", context: "api" }) + "\r\n"
+        JSON.stringify({ status: "Bye", context: "api" }) + "\r\n",
       );
     } catch (e) {
       console.log(e);
@@ -121,7 +121,7 @@ export class SocketServer extends Server {
   async sendFile(
     connection: Connection,
     error: NodeJS.ErrnoException,
-    fileStream: any
+    fileStream: any,
   ) {
     if (error) {
       this.sendMessage(connection, error, connection.messageId);
@@ -164,7 +164,7 @@ export class SocketServer extends Server {
         ) {
           const data = connection.rawConnection.socketDataString.slice(
             0,
-            index
+            index,
           );
           connection.rawConnection.socketDataString =
             connection.rawConnection.socketDataString.slice(index + d.length);
@@ -206,7 +206,7 @@ export class SocketServer extends Server {
             error: error,
             context: "response",
           },
-          null
+          null,
         );
       }
     }
@@ -234,13 +234,13 @@ export class SocketServer extends Server {
         return this.sendMessage(
           connection,
           { status: "OK", context: "response", data: data },
-          connection.messageId
+          connection.messageId,
         );
       } catch (error) {
         return this.sendMessage(
           connection,
           { error: error, context: "response" },
-          connection.messageId
+          connection.messageId,
         );
       }
     }
@@ -295,7 +295,7 @@ export class SocketServer extends Server {
         if (!connection.rawConnection.shutDownTimer) {
           connection.rawConnection.shutDownTimer = setTimeout(
             connection.destroy,
-            this.attributes.pendingShutdownWaitLimit
+            this.attributes.pendingShutdownWaitLimit,
           );
         }
       }
@@ -304,7 +304,7 @@ export class SocketServer extends Server {
     if (pendingConnections > 0) {
       this.log(
         `waiting on shutdown, there are still ${pendingConnections} connected clients waiting on a response`,
-        "notice"
+        "notice",
       );
       await new Promise((resolve) => {
         setTimeout(resolve, 1000);

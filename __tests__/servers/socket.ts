@@ -21,7 +21,7 @@ let client2Details = { id: null };
 const makeSocketRequest = async (
   thisClient,
   message = "",
-  delimiter = "\r\n"
+  delimiter = "\r\n",
 ): Promise<any> => {
   let data = "";
   let response;
@@ -97,18 +97,18 @@ describe("Server: Socket", () => {
     const response = await makeSocketRequest(client, "status");
     expect(response).toBeInstanceOf(Object);
     expect(response.id).toEqual(
-      `test-server-${process.env.JEST_WORKER_ID || 0}`
+      `test-server-${process.env.JEST_WORKER_ID || 0}`,
     );
   });
 
   test("stringified JSON can also be sent as actions", async () => {
     const response = await makeSocketRequest(
       client,
-      JSON.stringify({ action: "status", params: { something: "else" } })
+      JSON.stringify({ action: "status", params: { something: "else" } }),
     );
     expect(response).toBeInstanceOf(Object);
     expect(response.id).toEqual(
-      `test-server-${process.env.JEST_WORKER_ID || 0}`
+      `test-server-${process.env.JEST_WORKER_ID || 0}`,
     );
   });
 
@@ -133,7 +133,7 @@ describe("Server: Socket", () => {
 
     const response = await makeSocketRequest(client, JSON.stringify(msg));
     expect(response.cacheTestResults.loadResp.key).toEqual(
-      "cacheTest_" + msg.params.key
+      "cacheTest_" + msg.params.key,
     );
     expect(response.cacheTestResults.loadResp.value).toEqual(msg.params.value);
   });
@@ -167,14 +167,14 @@ describe("Server: Socket", () => {
     await makeSocketRequest(client, "paramDelete key");
     const response = await makeSocketRequest(client, "cacheTest");
     expect(response.error).toEqual(
-      "key is a required parameter for this action"
+      "key is a required parameter for this action",
     );
   });
 
   test("a new param can be added and viewed", async () => {
     const response = await makeSocketRequest(
       client,
-      "paramAdd key=socketTestKey"
+      "paramAdd key=socketTestKey",
     );
     expect(response.status).toEqual("OK");
     const viewResponse = await makeSocketRequest(client, "paramView key");
@@ -201,13 +201,13 @@ describe("Server: Socket", () => {
     const response = await makeSocketRequest(client, "cacheTest");
     expect(response.error).toBeUndefined();
     expect(response.cacheTestResults.loadResp.key).toEqual(
-      "cacheTest_socketTestKey"
+      "cacheTest_socketTestKey",
     );
     expect(response.cacheTestResults.loadResp.value).toEqual("abc123");
 
     const responseAgain = await makeSocketRequest(client, "cacheTest");
     expect(responseAgain.cacheTestResults.loadResp.key).toEqual(
-      "cacheTest_socketTestKey"
+      "cacheTest_socketTestKey",
     );
     expect(responseAgain.cacheTestResults.loadResp.value).toEqual("abc123");
   });
@@ -215,10 +215,13 @@ describe("Server: Socket", () => {
   test("only params sent in a JSON block are used", async () => {
     const response = await makeSocketRequest(
       client,
-      JSON.stringify({ action: "cacheTest", params: { key: "someOtherValue" } })
+      JSON.stringify({
+        action: "cacheTest",
+        params: { key: "someOtherValue" },
+      }),
     );
     expect(response.error).toEqual(
-      "value is a required parameter for this action"
+      "value is a required parameter for this action",
     );
   });
 
@@ -241,7 +244,7 @@ describe("Server: Socket", () => {
       JSON.stringify({
         action: "randomNumber",
         params: { messageId: "abc123" },
-      })
+      }),
     );
     expect(response.messageId).toEqual("abc123");
   });
@@ -294,7 +297,7 @@ describe("Server: Socket", () => {
             const response = responses[i];
             if (i === "0") {
               expect(response.error).toEqual(
-                "you have too many pending requests"
+                "you have too many pending requests",
               );
             } else {
               expect(response.error).toBeUndefined();
@@ -393,7 +396,7 @@ describe("Server: Socket", () => {
       expect(response.status).toEqual("OK");
       const responseAgain = await makeSocketRequest(
         client,
-        "roomView otherRoom"
+        "roomView otherRoom",
       );
       expect(responseAgain.data.room).toEqual("otherRoom");
       expect(responseAgain.data.membersCount).toEqual(1);
@@ -421,7 +424,7 @@ describe("Server: Socket", () => {
             await api.chatRoom.broadcast(
               {},
               room,
-              `I have entered the room: ${connection.id}`
+              `I have entered the room: ${connection.id}`,
             );
           },
         });
@@ -432,7 +435,7 @@ describe("Server: Socket", () => {
             await api.chatRoom.broadcast(
               {},
               room,
-              `I have left the room: ${connection.id}`
+              `I have left the room: ${connection.id}`,
             );
           },
         });
@@ -453,7 +456,7 @@ describe("Server: Socket", () => {
         makeSocketRequest(client2, "roomAdd otherRoom");
         const response = await makeSocketRequest(client, "");
         expect(response.message).toEqual(
-          "I have entered the room: " + client2Details.id
+          "I have entered the room: " + client2Details.id,
         );
         expect(response.from.toString()).toEqual("0");
       });
@@ -462,7 +465,7 @@ describe("Server: Socket", () => {
         makeSocketRequest(client2, "roomLeave defaultRoom\r\n");
         const response = await makeSocketRequest(client, "");
         expect(response.message).toEqual(
-          "I have left the room: " + client2Details.id
+          "I have left the room: " + client2Details.id,
         );
         expect(response.from.toString()).toEqual("0");
       });
@@ -496,7 +499,7 @@ describe("Server: Socket", () => {
         await makeSocketRequest(client2, "roomAdd defaultRoom");
         const response = await makeSocketRequest(
           client2,
-          "roomView defaultRoom"
+          "roomView defaultRoom",
         );
         expect(response.data.room).toEqual("defaultRoom");
         for (const key in response.data.members) {
@@ -546,7 +549,7 @@ describe("Server: Socket", () => {
         await makeSocketRequest(client2, "roomAdd defaultRoom");
         const response = await makeSocketRequest(
           client2,
-          "roomView defaultRoom"
+          "roomView defaultRoom",
         );
         expect(response.data.room).toEqual("defaultRoom");
         for (const key in response.data.members) {
@@ -565,7 +568,7 @@ describe("Server: Socket", () => {
     test("server can disconnect a client", async () => {
       const response = await makeSocketRequest(client, "status");
       expect(response.id).toEqual(
-        `test-server-${process.env.JEST_WORKER_ID || 0}`
+        `test-server-${process.env.JEST_WORKER_ID || 0}`,
       );
       expect(client.readable).toEqual(true);
       expect(client.writable).toEqual(true);
