@@ -51,6 +51,6 @@
     "prepare": "npm run lint && npm run build"
   },
   "dependencies": {
-    "uuid": "^9.0.0"
+    "uuid": "^10.0.0"
   }
 }
